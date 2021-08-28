@@ -1,79 +1,57 @@
-import { useEffect, useState } from "react";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@material-ui/core";
-import { confirmOffer, makeBooking } from "./api";
+import { useEffect, useState } from 'react'
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
+import { confirmOffer, makeBooking } from './api'
 
 const BookingDialog = ({ offerId, setOfferId }) => {
-  const [available, setAvailable] = useState(null);
-  const handleClose = () => setOfferId(null);
+  const [available, setAvailable] = useState(null)
+  const handleClose = () => setOfferId(null)
   const handleBooking = async () => {
-    const response = await makeBooking(offerId);
+    const response = await makeBooking(offerId)
 
     if (response) {
-      console.log(response);
-      handleClose();
+      console.log(response)
+      handleClose()
     }
-  };
+  }
 
   useEffect(() => {
     if (offerId) {
       confirmOffer(offerId)
         .then((response) => {
           if (response) {
-            const [offer] = response.offers;
+            const [offer] = response.offers
 
-            setAvailable(offer && offer.id === offerId);
+            setAvailable(offer && offer.id === offerId)
           } else {
-            setAvailable(false);
+            setAvailable(false)
           }
         })
         .catch((error) => {
-          console.error(error);
-        });
+          console.error(error)
+        })
     } else {
-      setAvailable(null);
+      setAvailable(null)
     }
-  }, [offerId]);
+  }, [offerId])
 
   return (
-    <Dialog
-      open={Boolean(offerId)}
-      onClose={handleClose}
-      fullWidth
-      maxWidth="xs"
-    >
-      <DialogTitle id="simple-dialog-title">BOOK THE OFFER</DialogTitle>
+    <Dialog open={Boolean(offerId)} onClose={handleClose} fullWidth maxWidth='xs'>
+      <DialogTitle id='simple-dialog-title'>BOOK THE OFFER</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          OFFER: {offerId} {available === false && " is not available"}
+          OFFER: {offerId} {available === false && ' is not available'}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={handleClose}
-          color="primary"
-          disabled={typeof available !== "boolean"}
-        >
+        <Button onClick={handleClose} color='primary' disabled={typeof available !== 'boolean'}>
           CANCEL
         </Button>
-        <Button
-          color="primary"
-          variant="contained"
-          autoFocus
-          disabled={!available}
-          onClick={handleBooking}
-        >
+        <Button color='primary' variant='contained' autoFocus disabled={!available} onClick={handleBooking}>
           CONTINUE
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export { BookingDialog };
+export { BookingDialog }

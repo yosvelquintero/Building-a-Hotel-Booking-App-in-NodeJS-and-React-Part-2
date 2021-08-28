@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 import {
   Button,
   CircularProgress,
@@ -8,84 +8,83 @@ import {
   makeStyles,
   ListItemIcon,
   Divider,
-} from "@material-ui/core";
-import { LocalOffer as TagIcon } from "@material-ui/icons";
-import { getOffers } from "./api";
+} from '@material-ui/core'
+import { LocalOffer as TagIcon } from '@material-ui/icons'
+import { getOffers } from './api'
 
 const useStyles = makeStyles((theme) => ({
   offerList: {
-    width: "100%",
+    width: '100%',
   },
   offerLoadingContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
   },
   offerListing: {
-    display: "flex",
-    alignItems: "flex-end",
-    flexDirection: "column",
-    [theme.breakpoints.up("sm")]: {
-      alignItems: "flex-start",
-      flexDirection: "row",
+    display: 'flex',
+    alignItems: 'flex-end',
+    flexDirection: 'column',
+    [theme.breakpoints.up('sm')]: {
+      alignItems: 'flex-start',
+      flexDirection: 'row',
     },
   },
   offerIcon: {
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "inline-flex",
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline-flex',
     },
   },
   offerTextWrapper: {
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
     paddingRight: theme.spacing(1),
-    width: "100%",
+    width: '100%',
   },
   offerText: {
-    display: "block",
+    display: 'block',
   },
-}));
+}))
 const Offers = ({ active, hotelId, setOfferId }) => {
-  const classes = useStyles();
-  const [loading, setLoading] = useState(true);
-  const [offers, setOffers] = useState([]);
+  const classes = useStyles()
+  const [loading, setLoading] = useState(true)
+  const [offers, setOffers] = useState([])
 
   useEffect(() => {
     if (active) {
-      setLoading(true);
+      setLoading(true)
       getOffers(hotelId)
         .then((offers) => {
-          setOffers(offers);
-          setLoading(false);
+          setOffers(offers)
+          setLoading(false)
         })
         .catch((error) => {
-          console.error(error);
-          setLoading(false);
-        });
+          console.error(error)
+          setLoading(false)
+        })
     } else {
-      setOffers([]);
+      setOffers([])
     }
-  }, [active, hotelId]);
+  }, [active, hotelId])
 
   if (loading) {
     return (
       <div className={classes.offerLoadingContainer}>
         <CircularProgress />
       </div>
-    );
+    )
   }
 
   return (
     <List className={classes.offerList}>
       <Divider />
       {offers.map((offer, index) => {
-        const [headline, ...description] =
-          offer.room.description.text.split("\n");
+        const [headline, ...description] = offer.room.description.text.split('\n')
 
         return (
           <ListItem
-            alignItems="flex-start"
+            alignItems='flex-start'
             divider={index !== offers.length - 1}
             className={classes.offerListing}
             key={offer.id}
@@ -103,26 +102,22 @@ const Offers = ({ active, hotelId, setOfferId }) => {
                       <span key={line} className={classes.offerText}>
                         {line}
                       </span>
-                    );
+                    )
                   })}
                 </>
               }
             />
             <div>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => setOfferId(offer.id)}
-              >
+              <Button color='primary' variant='contained' onClick={() => setOfferId(offer.id)}>
                 {offer.price.total}
                 {offer.price.currency}
               </Button>
             </div>
           </ListItem>
-        );
+        )
       })}
     </List>
-  );
-};
+  )
+}
 
-export { Offers };
+export { Offers }
